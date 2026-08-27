@@ -61,4 +61,10 @@ class Servico{
         $sql->bindValue(':id', $id);
         return $sql->execute();
     }
+
+    public function removerServico($id){
+        $sql = $this->pdo->prepare("DELETE FROM service WHERE id_service = :id");
+        $sql->bindValue(':id', $id);
+        return $sql->execute();
+    }
 }

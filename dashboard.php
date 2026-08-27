@@ -54,6 +54,7 @@ $servicos = $os->listarServicosComNomeUsuario();
                     <td><?= $servico['nome_usuario'] ?></td>
                     <td>
                         <a href="form-servico.php?id=<?= $servico['id_service'] ?>" class="botao botao--secundario">alterar</a>
+                        <a href="excluir-servico.php?id=<?= $servico['id_service'] ?>" class="botao botao--perigo" onclick="return confirm('Tem certeza que deseja excluir este serviço?')">excluir</a>
                     </td>
                 </tr>
                 <?php } ?>
