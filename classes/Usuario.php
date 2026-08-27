@@ -24,4 +24,16 @@ class Usuario{
                return false;
           }
     }
+
+    public function buscaUsuarioPorId($id_user){
+        $sql = $this->pdo->prepare("SELECT id_user, name, email FROM user WHERE id_user = :id");
+        $sql->bindValue(":id", $id_user);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            return $sql->fetch();
+        } else{
+            return [];
+        }
+    }
 }
