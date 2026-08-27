@@ -53,6 +53,9 @@ $servicos = $os->listarServicosComNomeUsuario();
                     <td><?= $servico['status'] ?></td>
                     <td><?= $servico['nome_usuario'] ?></td>
                     <td>
+                        <?php if($servico['status'] == 'Pendente'){ ?>
+                            <a href="finalizar-servico.php?id=<?= $servico['id_service'] ?>">finalizar</a>
+                        <?php } ?>                        
                         <a href="form-servico.php?id=<?= $servico['id_service'] ?>" class="botao botao--secundario">alterar</a>
                         <a href="excluir-servico.php?id=<?= $servico['id_service'] ?>" class="botao botao--perigo" onclick="return confirm('Tem certeza que deseja excluir este serviço?')">excluir</a>
                     </td>

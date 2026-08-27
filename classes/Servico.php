@@ -67,4 +67,30 @@ class Servico{
         $sql->bindValue(':id', $id);
         return $sql->execute();
     }
+
+    public function calcularComissao($preco){
+        $preco = $this->converterPreco($preco);
+        if($preco <= 1000){
+            return $preco * 0.05;
+        } elseif($preco <= 10000){
+            return $preco * 0.10;
+        } else{
+            return $preco * 0.20;
+        }
+    }
+
+    public function finalizarServico($id){
+        $servico = $this->buscarServicoPorId($id);
+        if($servico){
+            $comissao = $this->calcularComissao($servico['price']);
+            $sql = $this->pdo->prepare("UPDATE service 
+                                            SET finished_at = NOW(), commission_user = :comissao 
+                                            WHERE id_service = :id AND finished_at IS NULL");
+            $sql->bindValue(':comissao', $comissao);
+            $sql->bindValue(':id', $id);
+            return $sql->execute();
+        } else{
+            return false;
+        }
+    }
 }
