@@ -27,8 +27,17 @@ class Servico{
     public function cadastrarServico($descricao, $preco, $id_usuario){
         $sql = $this->pdo->prepare("INSERT INTO service (description, price, user_id_user, created_at) VALUES (:descricao, :preco, :id_usuario, NOW())");
         $sql->bindValue(':descricao', $descricao);
+        $preco = $this->converterPreco($preco);
         $sql->bindValue(':preco', $preco);
         $sql->bindValue(':id_usuario', $id_usuario);
         return $sql->execute();
+    }
+
+    public function converterPreco($preco){
+        if(strpos($preco, ',') !== false){
+            $preco = str_replace('.', '', $preco);
+            $preco = str_replace(',', '.', $preco);
+        }
+        return $preco;
     }
 }
