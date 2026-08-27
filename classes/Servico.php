@@ -40,4 +40,25 @@ class Servico{
         }
         return $preco;
     }
+
+    public function buscarServicoPorId($id){
+        $sql = $this->pdo->prepare("SELECT * FROM service WHERE id_service = :id");
+        $sql->bindValue(':id', $id);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            return $sql->fetch();
+        } else{
+            return null;
+        }
+    }
+
+    public function atualizarServico($id, $descricao, $preco){
+        $sql = $this->pdo->prepare("UPDATE service SET description = :descricao, price = :preco WHERE id_service = :id");
+        $sql->bindValue(':descricao', $descricao);
+        $preco = $this->converterPreco($preco);
+        $sql->bindValue(':preco', $preco);
+        $sql->bindValue(':id', $id);
+        return $sql->execute();
+    }
 }

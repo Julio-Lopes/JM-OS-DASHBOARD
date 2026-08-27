@@ -41,6 +41,7 @@ $servicos = $os->listarServicosComNomeUsuario();
                     <th>Preço</th>
                     <th>Status</th>
                     <th>Usuário</th>
+                    <th>Ações</th>
                 </tr>
             </thead>
             <tbody>
@@ -51,6 +52,9 @@ $servicos = $os->listarServicosComNomeUsuario();
                     <td><?= $servico['price'] ?></td>
                     <td><?= $servico['status'] ?></td>
                     <td><?= $servico['nome_usuario'] ?></td>
+                    <td>
+                        <a href="form-servico.php?id=<?= $servico['id_service'] ?>" class="botao botao--secundario">alterar</a>
+                    </td>
                 </tr>
                 <?php } ?>
             </tbody>
