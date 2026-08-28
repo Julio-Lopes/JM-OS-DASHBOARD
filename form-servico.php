@@ -70,7 +70,7 @@ require_once './includes/header.php';
             <label for="preco">Preço:</label>
             <input type="text" id="preco" name="preco" value="<?= htmlspecialchars($servicoEncontrado['price'] ?? '', ENT_QUOTES, 'UTF-8') ?>" required>
 
-            <button type="submit"><?php echo isset($servicoEncontrado) ? 'Atualizar' : 'Cadastrar'; ?></button>
+            <button type="submit" class="botao botao--primario botao--bloco"><?php echo isset($servicoEncontrado) ? 'Atualizar' : 'Cadastrar'; ?></button>
         </form>
         <a href="dashboard.php" class="botao botao--secundario botao--bloco">Voltar</a>
     </div>

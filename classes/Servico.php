@@ -124,6 +124,22 @@ class Servico{
         return $sql->fetchColumn();
     }
 
+    public function resumoServicosPorUsuario($id_usuario){
+        $sql = $this->pdo->prepare("SELECT
+                                        COALESCE(SUM(price), 0) AS total,
+                                        COALESCE(SUM(CASE WHEN finished_at IS NOT NULL THEN price ELSE 0 END), 0) AS finalizados,
+                                        COALESCE(SUM(CASE WHEN finished_at IS NULL THEN price ELSE 0 END), 0) AS pendentes,
+                                        COALESCE(SUM(CASE WHEN finished_at IS NOT NULL THEN commission_user ELSE 0 END), 0) AS comissao,
+                                        COUNT(*) AS quantidade,
+                                        SUM(CASE WHEN finished_at IS NOT NULL THEN 1 ELSE 0 END) AS quantidade_finalizados,
+                                        SUM(CASE WHEN finished_at IS NULL THEN 1 ELSE 0 END) AS quantidade_pendentes
+                                    FROM service
+                                    WHERE user_id_user = :id");
+        $sql->bindValue(':id', $id_usuario);
+        $sql->execute();
+        return $sql->fetch(PDO::FETCH_ASSOC);
+    }
+
     public function ultimosServicosPendentes($id_usuario, $limite = 5){
         $sql = $this->pdo->prepare("SELECT * FROM service 
                                     WHERE user_id_user = :id AND finished_at IS NULL 
