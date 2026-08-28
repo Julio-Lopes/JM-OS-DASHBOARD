@@ -6,22 +6,44 @@ class Servico{
         $this->pdo = $pdo;
     }
 
-    public function listarServicosComNomeUsuario(){
-        $sql = $this->pdo->prepare(
-            "SELECT 
-                s.id_service, s.description, s.price, 
-                CASE WHEN s.finished_at IS NULL THEN 'Pendente' ELSE 'Finalizado' END as status, 
-                u.name AS nome_usuario 
-                FROM service AS s 
-                INNER JOIN user AS u ON s.user_id_user = u.id_user
-                ORDER BY s.created_at DESC");
-        $sql->execute();
+    public function listarServicosComNomeUsuario($inicio = null, $fim = null, $nome = null, $status = null, $usuario = null){
+        $query = "SELECT s.*, u.name as nome_usuario, CASE WHEN s.finished_at IS NULL THEN 'Pendente' ELSE 'Finalizado' END as status
+                  FROM service s
+                  JOIN user u ON s.user_id_user = u.id_user
+                  WHERE 1=1";
 
-        if($sql->rowCount() > 0){
-            return $sql->fetchAll();
-        } else{
-            return [];
+        if($inicio && $fim){
+            $query .= " AND s.created_at BETWEEN :inicio AND :fim";
         }
+        if($nome){
+            $query .= " AND s.description LIKE :nome";
+        }
+        if($status === 'pendente'){
+            $query .= " AND s.finished_at IS NULL";
+        } elseif($status === 'finalizado'){
+            $query .= " AND s.finished_at IS NOT NULL";
+        }
+        if($usuario){
+            $query .= " AND s.user_id_user = :usuario";
+        }
+
+        $query .= " ORDER BY s.created_at DESC";
+
+        $sql = $this->pdo->prepare($query);
+
+        if($inicio && $fim){
+            $sql->bindValue(':inicio', $inicio);
+            $sql->bindValue(':fim', $fim . ' 23:59:59');
+        }
+        if($nome){
+            $sql->bindValue(':nome', "%$nome%");
+        }
+        if($usuario){
+            $sql->bindValue(':usuario', $usuario);
+        }
+
+        $sql->execute();
+        return $sql->fetchAll();
     }
 
     public function cadastrarServico($descricao, $preco, $id_usuario){

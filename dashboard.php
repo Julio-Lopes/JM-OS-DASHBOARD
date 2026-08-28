@@ -13,10 +13,18 @@ if(!isset($_SESSION['id_user']))
 
 $nome = new Usuario($pdo);
 $dados_usuario = $nome->buscaUsuarioPorId($_SESSION['id_user']);
-$nome = $dados_usuario['name'];
+$nomeUsuario = $dados_usuario['name'];
+
+$usuarios = $nome->buscaTodosUsuarios();
 
 $os = new Servico($pdo);
-$servicos = $os->listarServicosComNomeUsuario();
+$servicos = $os->listarServicosComNomeUsuario(
+    $_GET['inicio'] ?? null,
+    $_GET['fim'] ?? null,
+    $_GET['nome'] ?? null,
+    $_GET['status'] ?? null,
+    $_GET['usuario'] ?? null
+);
 ?>
 
 <!DOCTYPE html>
@@ -29,8 +37,32 @@ $servicos = $os->listarServicosComNomeUsuario();
 <body>
     <div class="formulario">
         <h1 class="titulo">DASHBOARD</h1>
-        <p>Bem-vindo, <?= $nome ?></p>
+        <p>Bem-vindo, <?= $nomeUsuario ?></p>
         <a href="sair.php" class="botao botao--secundario botao--bloco">Sair</a>
+    </div>
+    <div>
+        <form method="get">
+            <label for="inicio">Início:</label>
+            <input type="date" name="inicio" id="inicio" value="<?= $_GET['inicio'] ?? '' ?>">
+            <label for="fim">Fim:</label>
+            <input type="date" name="fim" id="fim" value="<?= $_GET['fim'] ?? '' ?>">
+            <label for="nome">Nome:</label>
+            <input type="text" name="nome" id="nome" value="<?= $_GET['nome'] ?? '' ?>">
+            <label for="status">Status:</label>
+            <select name="status" id="status">
+                <option value="">Todos</option>
+                <option value="pendente" <?= (isset($_GET['status']) && $_GET['status'] === 'pendente') ? 'selected' : '' ?>>Pendente</option>
+                <option value="finalizado" <?= (isset($_GET['status']) && $_GET['status'] === 'finalizado') ? 'selected' : '' ?>>Finalizado</option>
+            </select>
+            <label for="usuario">Usuário:</label>
+            <select name="usuario" id="usuario">
+                <option value="">Todos</option>
+                <?php foreach($usuarios as $u){ ?>
+                    <option value="<?= $u['id_user'] ?>" <?= (isset($_GET['usuario']) && $_GET['usuario'] === $u['id_user']) ? 'selected' : '' ?>><?= $u['name'] ?></option>
+                <?php } ?>
+            </select>
+            <button type="submit">Filtrar</button>
+        </form>
     </div>
     <div>
         <table>

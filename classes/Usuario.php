@@ -25,6 +25,12 @@ class Usuario{
           }
     }
 
+    public function buscaTodosUsuarios(){
+        $sql = $this->pdo->prepare("SELECT id_user, name FROM user");
+        $sql->execute();
+        return $sql->fetchAll();
+    }
+
     public function buscaUsuarioPorId($id_user){
         $sql = $this->pdo->prepare("SELECT id_user, name, email FROM user WHERE id_user = :id");
         $sql->bindValue(":id", $id_user);
