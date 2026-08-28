@@ -11,11 +11,11 @@ if(!isset($_SESSION['id_user']))
     exit;
 }
 
-$nome = new Usuario($pdo);
-$dados_usuario = $nome->buscaUsuarioPorId($_SESSION['id_user']);
+$usuario_obj = new Usuario($pdo);
+$dados_usuario = $usuario_obj->buscaUsuarioPorId($_SESSION['id_user']);
 $nomeUsuario = $dados_usuario['name'];
 
-$usuarios = $nome->buscaTodosUsuarios();
+$usuarios = $usuario_obj->buscaTodosUsuarios();
 
 $os = new Servico($pdo);
 $servicos = $os->listarServicosComNomeUsuario(
@@ -25,6 +25,9 @@ $servicos = $os->listarServicosComNomeUsuario(
     $_GET['status'] ?? null,
     $_GET['usuario'] ?? null
 );
+
+$servicosRecentes = $os->ultimosServicosPendentes($_SESSION['id_user'],5);
+$totalServicos = $os->totalServicosPorUsuario($_SESSION['id_user']);
 ?>
 
 <!DOCTYPE html>
@@ -37,8 +40,24 @@ $servicos = $os->listarServicosComNomeUsuario(
 <body>
     <div class="formulario">
         <h1 class="titulo">DASHBOARD</h1>
-        <p>Bem-vindo, <?= $nomeUsuario ?></p>
+        <p>Bem-vindo, <?= $nomeUsuario ?> | Data: <?= date('d/m/Y') ?></p>
         <a href="sair.php" class="botao botao--secundario botao--bloco">Sair</a>
+    </div>
+    <div>
+        <p>Total de Serviços: <?= number_format($totalServicos, 2, ',', '.') ?></p>
+        <a href="form-servico.php" class="botao botao--primario">+ Novo Serviço</a>
+    </div>
+    <div>
+        <h2>Últimos Serviços Pendentes</h2>
+        <?php if(empty($servicosRecentes)){ ?>
+            <p>Nenhum serviço pendente.</p>
+        <?php } else { ?>
+            <ul>
+                <?php foreach($servicosRecentes as $servico){ ?>
+                    <li><?= $servico['description'] ?> - <?= number_format($servico['price'], 2, ',', '.') ?> - <?= date('d/m/Y', strtotime($servico['created_at'])) ?></li>
+                <?php } ?>
+            </ul>
+        <?php } ?>
     </div>
     <div>
         <form method="get">
@@ -58,7 +77,7 @@ $servicos = $os->listarServicosComNomeUsuario(
             <select name="usuario" id="usuario">
                 <option value="">Todos</option>
                 <?php foreach($usuarios as $u){ ?>
-                    <option value="<?= $u['id_user'] ?>" <?= (isset($_GET['usuario']) && $_GET['usuario'] === $u['id_user']) ? 'selected' : '' ?>><?= $u['name'] ?></option>
+                    <option value="<?= $u['id_user'] ?>" <?= (isset($_GET['usuario']) && $_GET['usuario'] == $u['id_user']) ? 'selected' : '' ?>><?= $u['name'] ?></option>
                 <?php } ?>
             </select>
             <button type="submit">Filtrar</button>

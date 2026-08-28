@@ -116,4 +116,22 @@ class Servico{
             return false;
         }
     }
+
+    public function totalServicosPorUsuario($id_usuario){
+        $sql = $this->pdo->prepare("SELECT COALESCE(SUM(price), 0) FROM service WHERE user_id_user = :id");
+        $sql->bindValue(':id', $id_usuario);
+        $sql->execute();
+        return $sql->fetchColumn();
+    }
+
+    public function ultimosServicosPendentes($id_usuario, $limite = 5){
+        $sql = $this->pdo->prepare("SELECT * FROM service 
+                                    WHERE user_id_user = :id AND finished_at IS NULL 
+                                    ORDER BY created_at DESC 
+                                    LIMIT :limite");
+        $sql->bindValue(':id', $id_usuario);
+        $sql->bindValue(':limite', (int)$limite, PDO::PARAM_INT);
+        $sql->execute();
+        return $sql->fetchAll();
+    }
 }
