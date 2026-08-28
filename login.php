@@ -38,10 +38,10 @@ if(isset($_POST['email']))
 </head>
 <body class="pagina-autenticacao">
 <div class="formulario">
-    <h1 class="titulo">LOGIN</h1>
     <?php if($erro != ""){ ?>
         <p class="erro"><?= $erro ?></p>
     <?php } ?>
+    <h1 class="titulo">LOGIN</h1>
     <form method="post" action="" novalidate>
 
         <div class="campo">
