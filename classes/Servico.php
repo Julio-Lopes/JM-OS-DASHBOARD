@@ -1,4 +1,6 @@
 <?php
+
+// Classe responsável por gerenciar os serviços
 class Servico{
     private $pdo;
 
@@ -55,6 +57,7 @@ class Servico{
         return $sql->execute();
     }
 
+    // Converte preço do formato brasileiro para o formato americano
     public function converterPreco($preco){
         if(strpos($preco, ',') !== false){
             $preco = str_replace('.', '', $preco);
@@ -90,6 +93,7 @@ class Servico{
         return $sql->execute();
     }
 
+    // Método para calcular a comissão com base no preço do serviço
     public function calcularComissao($preco){
         $preco = $this->converterPreco($preco);
         if($preco <= 1000){

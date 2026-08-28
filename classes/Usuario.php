@@ -1,4 +1,6 @@
 <?php
+
+// Classe responsável por gerenciar os usuários
 class Usuario{
     private $pdo;
 
