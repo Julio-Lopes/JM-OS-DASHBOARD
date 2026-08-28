@@ -4,12 +4,17 @@ $_GET['id'] = $_GET['id'] ?? null;
 
 require_once './includes/conexao.php';
 require_once './classes/Servico.php';
+require_once './classes/Usuario.php';
 
 if(!isset($_SESSION['id_user']))
 {
     header("location: login.php");
     exit;
 }
+
+$usuario_obj = new Usuario($pdo);
+$dados_usuario = $usuario_obj->buscaUsuarioPorId($_SESSION['id_user']);
+$nomeUsuario = $dados_usuario['name'];
 
 $servico = new Servico($pdo);
 
@@ -49,29 +54,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 ?>
 
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?php echo isset($servicoEncontrado) ? 'Editar Serviço' : 'Cadastrar Serviço'; ?> | Sistema</title>
-</head>
-<body>
+<?php
+$tituloPagina = (isset($servicoEncontrado) ? 'Editar Serviço' : 'Cadastrar Serviço') . ' | Sistema';
+require_once './includes/header.php';
+?>
     <div class="formulario">
         <h1 class="titulo"><?php echo isset($servicoEncontrado) ? 'Editar Serviço' : 'Cadastrar Serviço'; ?></h1>
         <?php if($erro != ""){ ?>
-            <p><?= $erro ?></p>
+            <p><?= htmlspecialchars($erro, ENT_QUOTES, 'UTF-8') ?></p>
         <?php } ?>
         <form method="POST" action="">
             <label for="descricao">Descrição:</label>
-            <input type="text" id="descricao" name="descricao" maxlength="45" value="<?php echo isset($servicoEncontrado['description']) ? $servicoEncontrado['description'] : ''; ?>" required>
+            <input type="text" id="descricao" name="descricao" maxlength="45" value="<?= htmlspecialchars($servicoEncontrado['description'] ?? '', ENT_QUOTES, 'UTF-8') ?>" required>
 
             <label for="preco">Preço:</label>
-            <input type="text" id="preco" name="preco" value="<?php echo isset($servicoEncontrado['price']) ? $servicoEncontrado['price'] : ''; ?>" required>
+            <input type="text" id="preco" name="preco" value="<?= htmlspecialchars($servicoEncontrado['price'] ?? '', ENT_QUOTES, 'UTF-8') ?>" required>
 
             <button type="submit"><?php echo isset($servicoEncontrado) ? 'Atualizar' : 'Cadastrar'; ?></button>
         </form>
         <a href="dashboard.php" class="botao botao--secundario botao--bloco">Voltar</a>
     </div>
-</body>
-</html>
+<?php require_once './includes/footer.php'; ?>

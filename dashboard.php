@@ -28,20 +28,13 @@ $servicos = $os->listarServicosComNomeUsuario(
 
 $servicosRecentes = $os->ultimosServicosPendentes($_SESSION['id_user'],5);
 $totalServicos = $os->totalServicosPorUsuario($_SESSION['id_user']);
+$tituloPagina = 'Dashboard | Sistema';
 ?>
 
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Dashboard | Sistema</title>
-</head>
-<body>
+<?php require_once './includes/header.php'; ?>
     <div class="formulario">
         <h1 class="titulo">DASHBOARD</h1>
-        <p>Bem-vindo, <?= $nomeUsuario ?> | Data: <?= date('d/m/Y') ?></p>
-        <a href="sair.php" class="botao botao--secundario botao--bloco">Sair</a>
+        <p>Bem-vindo, <?= htmlspecialchars($nomeUsuario, ENT_QUOTES, 'UTF-8') ?> | Data: <?= date('d/m/Y') ?></p>
     </div>
     <div>
         <p>Total de Serviços: <?= number_format($totalServicos, 2, ',', '.') ?></p>
@@ -54,7 +47,7 @@ $totalServicos = $os->totalServicosPorUsuario($_SESSION['id_user']);
         <?php } else { ?>
             <ul>
                 <?php foreach($servicosRecentes as $servico){ ?>
-                    <li><?= $servico['description'] ?> - <?= number_format($servico['price'], 2, ',', '.') ?> - <?= date('d/m/Y', strtotime($servico['created_at'])) ?></li>
+                    <li><?= htmlspecialchars($servico['description'], ENT_QUOTES, 'UTF-8') ?> - <?= number_format($servico['price'], 2, ',', '.') ?> - <?= date('d/m/Y', strtotime($servico['created_at'])) ?></li>
                 <?php } ?>
             </ul>
         <?php } ?>
@@ -62,11 +55,11 @@ $totalServicos = $os->totalServicosPorUsuario($_SESSION['id_user']);
     <div>
         <form method="get">
             <label for="inicio">Início:</label>
-            <input type="date" name="inicio" id="inicio" value="<?= $_GET['inicio'] ?? '' ?>">
+            <input type="date" name="inicio" id="inicio" value="<?= htmlspecialchars($_GET['inicio'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
             <label for="fim">Fim:</label>
-            <input type="date" name="fim" id="fim" value="<?= $_GET['fim'] ?? '' ?>">
+            <input type="date" name="fim" id="fim" value="<?= htmlspecialchars($_GET['fim'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
             <label for="nome">Nome:</label>
-            <input type="text" name="nome" id="nome" value="<?= $_GET['nome'] ?? '' ?>">
+            <input type="text" name="nome" id="nome" value="<?= htmlspecialchars($_GET['nome'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
             <label for="status">Status:</label>
             <select name="status" id="status">
                 <option value="">Todos</option>
@@ -77,7 +70,7 @@ $totalServicos = $os->totalServicosPorUsuario($_SESSION['id_user']);
             <select name="usuario" id="usuario">
                 <option value="">Todos</option>
                 <?php foreach($usuarios as $u){ ?>
-                    <option value="<?= $u['id_user'] ?>" <?= (isset($_GET['usuario']) && $_GET['usuario'] == $u['id_user']) ? 'selected' : '' ?>><?= $u['name'] ?></option>
+                    <option value="<?= $u['id_user'] ?>" <?= (isset($_GET['usuario']) && $_GET['usuario'] == $u['id_user']) ? 'selected' : '' ?>><?= htmlspecialchars($u['name'], ENT_QUOTES, 'UTF-8') ?></option>
                 <?php } ?>
             </select>
             <button type="submit">Filtrar</button>
@@ -99,10 +92,10 @@ $totalServicos = $os->totalServicosPorUsuario($_SESSION['id_user']);
                 <?php foreach($servicos as $servico){ ?>
                 <tr>
                     <td><?= $servico['id_service'] ?></td>
-                    <td><?= $servico['description'] ?></td>
+                    <td><?= htmlspecialchars($servico['description'], ENT_QUOTES, 'UTF-8') ?></td>
                     <td><?= number_format($servico['price'], 2, ',', '.') ?></td>
-                    <td><?= $servico['status'] ?></td>
-                    <td><?= $servico['nome_usuario'] ?></td>
+                    <td><?= htmlspecialchars($servico['status'], ENT_QUOTES, 'UTF-8') ?></td>
+                    <td><?= htmlspecialchars($servico['nome_usuario'], ENT_QUOTES, 'UTF-8') ?></td>
                     <td>
                         <?php if($servico['status'] == 'Pendente'){ ?>
                             <a href="finalizar-servico.php?id=<?= $servico['id_service'] ?>">finalizar</a>
@@ -115,5 +108,4 @@ $totalServicos = $os->totalServicosPorUsuario($_SESSION['id_user']);
             </tbody>
         </table>
     </div>
-</body>
-</html>
+<?php require_once './includes/footer.php'; ?>
