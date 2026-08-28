@@ -43,9 +43,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="./css/style.css">
 	<title>Cadastro | Sistema</title>
 </head>
-<body>
+<body class="pagina-autenticacao">
 <div class="formulario">
 	<h1 class="titulo">CADASTRO</h1>
 	<?php if($erro != ""){ ?>

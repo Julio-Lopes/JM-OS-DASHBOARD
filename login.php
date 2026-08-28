@@ -33,10 +33,11 @@ if(isset($_POST['email']))
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="./css/style.css">
     <title>Entrar | Sistema</title>
 </head>
-<body>
-<div classe="formulario">
+<body class="pagina-autenticacao">
+<div class="formulario">
     <h1 class="titulo">LOGIN</h1>
     <?php if($erro != ""){ ?>
         <p class="erro"><?= $erro ?></p>
