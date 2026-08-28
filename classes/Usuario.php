@@ -42,4 +42,21 @@ class Usuario{
             return [];
         }
     }
+
+    public function cadastrarUsuario($name, $email, $password){
+        $sql = $this->pdo->prepare("SELECT id_user FROM user WHERE email = :email");
+        $sql->bindValue(":email", $email);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            return false; 
+        } else{
+            $sql = $this->pdo->prepare("INSERT INTO user (name, email, password, ativo) VALUES (:name, :email, :password, 1)");
+            $sql->bindValue(":name", $name);
+            $sql->bindValue(":email", $email);
+            $sql->bindValue(":password", password_hash($password, PASSWORD_DEFAULT));
+            $sql->execute();
+            return $this->pdo->lastInsertId();
+        }
+    }
 }

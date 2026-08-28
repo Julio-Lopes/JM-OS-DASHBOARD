@@ -42,7 +42,6 @@ if(isset($_POST['email']))
         <p class="erro"><?= $erro ?></p>
     <?php } ?>
     <form method="post" action="" novalidate>
-        <input type="hidden" name="csrf_token">
 
         <div class="campo">
             <label for="email">E-mail</label>
@@ -58,4 +57,7 @@ if(isset($_POST['email']))
 
         <button type="submit" class="botao botao--primario botao--bloco">Entrar</button>
     </form>
+    <p class="cartao-login__rodape">
+        Não tem conta? <a href="cadastro.php">Cadastrar usuário</a>
+    </p>
 </div>
