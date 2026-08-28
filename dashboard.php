@@ -49,7 +49,7 @@ $servicos = $os->listarServicosComNomeUsuario();
                 <tr>
                     <td><?= $servico['id_service'] ?></td>
                     <td><?= $servico['description'] ?></td>
-                    <td><?= $servico['price'] ?></td>
+                    <td><?= number_format($servico['price'], 2, ',', '.') ?></td>
                     <td><?= $servico['status'] ?></td>
                     <td><?= $servico['nome_usuario'] ?></td>
                     <td>

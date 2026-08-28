@@ -88,7 +88,8 @@ class Servico{
                                             WHERE id_service = :id AND finished_at IS NULL");
             $sql->bindValue(':comissao', $comissao);
             $sql->bindValue(':id', $id);
-            return $sql->execute();
+            $sql->execute();
+            return $sql->rowCount() > 0;
         } else{
             return false;
         }
