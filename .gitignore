@@ -1,0 +1,4 @@
+storage/emails/*
+!storage/emails/.gitkeep
+.vscode/
+.idea/
